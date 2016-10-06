@@ -144,6 +144,9 @@ class Board {
     }
 
     void print() {
+        if (mFoodX != -1 && mFoodY != -1) {
+            mBoard[mFoodX * mWidth + mFoodY] = Food;
+        }
         for (int i = 0; i < mWidth + 2; i++) {
             std::cout << PrintedObject[Edge] << ' ';
         }
@@ -172,7 +175,7 @@ class Board {
     std::random_device mRandomDevice;
     int mEmptyTilesCount;
 
-    int mFoodX, mFoodY;
+    int mFoodX = -1, mFoodY = -1;
 
     void getRandomCoordination(int &i, int &j) {
         std::uniform_int_distribution<int> uniformDistribution(0, mEmptyTilesCount);
