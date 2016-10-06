@@ -87,17 +87,13 @@ class Board {
         mSnakeArray.erase(mSnakeArray.begin());
         Directions[dir](i, j);
         if (!isValidPoint(i, j)) {
-            return Dead;
+            return -1;
         }
         mBoard[mSnakeArray.back()] = SnakeBody;
         mSnakeArray.push_back(i * mWidth + j);
-        if (mBoard[i * mWidth + j] == Food) {
-            mBoard[i * mWidth + j] = SnakeHead;
-            appendSnake();
-            return 0;
-        }
         mBoard[i * mWidth + j] = SnakeHead;
-        return Nothing;
+
+        return sqrt(pow(abs(mFoodX - i), 2) + pow(abs(mFoodY - j), 2));
     }
     int moveSnake() {
         return moveSnake(mLastDirection);
@@ -135,6 +131,8 @@ class Board {
 
     void setFood(int i, int j) {
         set(i, j, Food);
+        mFoodX = i;
+        mFoodY = j;
     }
     void setFood() {
         int i, j;
@@ -170,6 +168,8 @@ class Board {
 
     std::random_device mRandomDevice;
     int mEmptyTilesCount;
+
+    int mFoodX, mFoodY;
 
     void getRandomCoordination(int &i, int &j) {
         std::uniform_int_distribution<int> uniformDistribution(0, mEmptyTilesCount);
