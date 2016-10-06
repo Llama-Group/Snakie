@@ -60,6 +60,10 @@ void setup() {
     myBoard.print();
 }
 
+void gameover() {
+    exit(0);
+}
+
 int main() {
     setup();
     while (1) {
@@ -79,7 +83,17 @@ int main() {
             default:
                 break;
         }
-        myBoard.moveSnake(currentInput);
+        switch (myBoard.moveSnake(currentInput)) {
+            case -1:
+                gameover();
+                break;
+            case 0:
+                myBoard.appendSnake();
+                myBoard.setFood();
+                break;
+            default:
+                break;
+        }
         system("clear");
         myBoard.print();
     }

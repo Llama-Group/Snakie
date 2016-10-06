@@ -81,6 +81,9 @@ class Board {
     }
 
     int moveSnake(uint8_t dir) {
+        if (dir == -1) {
+            dir = mLastDirection;
+        }
         int i = mSnakeArray.back() / mWidth;
         int j = mSnakeArray.back() % mWidth;
         mBoard[mSnakeArray.front()] = Empty;
