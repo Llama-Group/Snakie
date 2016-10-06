@@ -15,28 +15,73 @@
 //
 
 #include <unistd.h>
+#include <termios.h>
 
+#include <chrono>
 #include <iostream>
+#include <thread>
 
 #include <Board.h>
 
 using std::cout;
 
-int main() {
-    Board myBoard(15, 15);
-    myBoard.setSnake(13, 7, Up);
+Board myBoard(15, 15);
 
-    myBoard.setFood(1, 7);
+uint8_t currentInput = -1;
 
-    myBoard.moveSnake(Up);
-    system("clear");
-
-    while(1) {
-        std::cout << myBoard.moveSnake() << '\n';
-        myBoard.print();
-        sleep(1);
-        system("clear");
+char getch() {
+    char buf = 0;
+    struct termios old = {0};
+    if (tcgetattr(0, &old) < 0) {
+        perror("tcsetattr()");
     }
+    old.c_lflag &= ~ICANON;
+    old.c_lflag &= ~ECHO;
+    old.c_cc[VMIN] = 1;
+    old.c_cc[VTIME] = 0;
+    if (tcsetattr(0, TCSANOW, &old) < 0) {
+        perror("tcsetattr ICANON");
+    }
+    if (read(0, &buf, 1) < 0) {
+        perror ("read()");
+    }
+    old.c_lflag |= ICANON;
+    old.c_lflag |= ECHO;
+    if (tcsetattr(0, TCSADRAIN, &old) < 0) {
+        perror ("tcsetattr ~ICANON");
+    }
+    return (buf);
+}
 
+void setup() {    
+    myBoard.setSnake(13, 7, Up);
+    myBoard.setFood(1, 7);
+    system("clear");
+    myBoard.print();
+}
+
+int main() {
+    setup();
+    while (1) {
+        switch (getch()) {
+            case 'w':
+                currentInput = Up;
+                break;
+            case 's':
+                currentInput = Down;
+                break;
+            case 'a':
+                currentInput = Left;
+                break;
+            case 'd':
+                currentInput = Right;
+                break;
+            default:
+                break;
+        }
+        myBoard.moveSnake(currentInput);
+        system("clear");
+        myBoard.print();
+    }
     return 0;
 }
