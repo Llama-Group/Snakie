@@ -19,6 +19,7 @@
 
 #include <string.h>
 
+#include <algorithm>
 #include <functional>
 #include <iostream>
 #include <random>
@@ -65,16 +66,80 @@ class Board {
 
     void setSnake(int i, int j, uint8_t dir) {
         set(i, j, SnakeHead);
-        
+        mSnakeArray.insert(mSnakeArray.begin(), i * mWidth + j);
         Directions[getReverse(dir)](i, j);
         set(i, j, SnakeBody);
+        mSnakeArray.insert(mSnakeArray.begin(), i * mWidth + j);
+        mLastDirection = dir;
     }
     void setSnake() {
         int i = -1, j = -1;
         while (i >= mWidth - 1 || j >= mHeight - 1 || i <= 1 || j <= 1) {
-            getRandomCoordinate(i, j);
+            getRandomCoordination(i, j);
         }
         setSnake(i, j, getRandomDirection());
+    }
+
+    int moveSnake(uint8_t dir) {
+        int i = mSnakeArray.back() / mWidth;
+        int j = mSnakeArray.back() % mWidth;
+        mBoard[mSnakeArray.front()] = Empty;
+        mSnakeArray.erase(mSnakeArray.begin());
+        Directions[dir](i, j);
+        if (!isValidPoint(i, j)) {
+            return Dead;
+        }
+        mBoard[mSnakeArray.back()] = SnakeBody;
+        mSnakeArray.push_back(i * mWidth + j);
+        if (mBoard[i * mWidth + j] == Food) {
+            mBoard[i * mWidth + j] = SnakeHead;
+            appendSnake();
+            return 0;
+        }
+        mBoard[i * mWidth + j] = SnakeHead;
+        return Nothing;
+    }
+    int moveSnake() {
+        return moveSnake(mLastDirection);
+    }
+
+    void appendSnake() {
+        int i1 = mSnakeArray[1] / mWidth;
+        int j1 = mSnakeArray[1] % mWidth;
+        int i2 = mSnakeArray[0] / mWidth;
+        int j2 = mSnakeArray[0] % mWidth;
+        uint8_t dir = calcDirection(i1, j1, i2, j2);
+        int i_t = i2, j_t = j2;
+        Directions[dir](i2, j2);
+        if (!isValidPoint(i2, j2)) {
+            Directions[getReverse(dir)](i2, j2);
+            for (uint8_t i = Up; i <= Right; i++) {
+                if (i == dir) {
+                    continue;
+                } else {
+                    Directions[i](i_t, j_t);
+                    if (isValidPoint(i_t, j_t)) {
+                        i2 = i_t;
+                        j2 = j_t;
+                        break;
+                    } else {
+                        i_t = i2;
+                        j_t = j2;
+                    }
+                }
+            }
+        }
+        mBoard[i2 * mWidth + j2] = SnakeBody;
+        mSnakeArray.insert(mSnakeArray.begin(), i2 * mWidth + j2);
+    }
+
+    void setFood(int i, int j) {
+        set(i, j, Food);
+    }
+    void setFood() {
+        int i, j;
+        getRandomCoordination(i, j);
+        setFood(i, j);
     }
 
     void print() {
@@ -101,11 +166,12 @@ class Board {
     uint8_t *mBoard;
 
     std::vector<int> mSnakeArray;
+    uint8_t mLastDirection = Up;
 
     std::random_device mRandomDevice;
     int mEmptyTilesCount;
 
-    void getRandomCoordinate(int &i, int &j) {
+    void getRandomCoordination(int &i, int &j) {
         std::uniform_int_distribution<int> uniformDistribution(0, mEmptyTilesCount);
         int countDown = uniformDistribution(mRandomDevice);
         int index = 0;
@@ -126,6 +192,27 @@ class Board {
 
     uint8_t getReverse(uint8_t dir) {
         return dir % 2 ? dir - 1 : dir + 1;
+    }
+
+    // 1 -> 2.
+    uint8_t calcDirection(int i1, int j1, int i2, int j2) {
+        int deltaI = i2 - i1, deltaJ = j2 - j1;
+        if (deltaI == -1) {
+            return Up;
+        } else if (deltaI == 1) {
+            return Down;
+        } else if (deltaJ == -1) {
+            return Left;
+        } else if (deltaJ == 1) {
+            return Right;
+        } else {
+            // TODO: Throw an exception.
+            return 100;
+        }
+    }
+
+    bool isValidPoint(int i, int j) {
+        return i <= mWidth && j <= mHeight && i >= 0 && j >= 0 && std::find(mSnakeArray.begin(), mSnakeArray.end(), i * mWidth + j) == mSnakeArray.end();
     }
 };
 

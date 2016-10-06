@@ -14,6 +14,8 @@
 //  limitations under the License.
 //
 
+#include <unistd.h>
+
 #include <iostream>
 
 #include <Board.h>
@@ -22,8 +24,19 @@ using std::cout;
 
 int main() {
     Board myBoard(15, 15);
-    myBoard.setSnake();
-    myBoard.print();
+    myBoard.setSnake(13, 7, Up);
+
+    myBoard.setFood(1, 7);
+
+    myBoard.moveSnake(Up);
+    system("clear");
+
+    while(1) {
+        std::cout << myBoard.moveSnake() << '\n';
+        myBoard.print();
+        sleep(1);
+        system("clear");
+    }
 
     return 0;
 }
