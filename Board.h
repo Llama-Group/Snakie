@@ -161,7 +161,11 @@ class Board {
         for (int i = 0; i < mWidth + 2; i++) {
             std::cout << PrintedObject[Edge] << ' ';
         }
-        std::cout << '\n';
+        std::cout << "\nScore: " << mSnakeArray.size() << '\n';
+    }
+
+    int getScore() {
+        return mSnakeArray.size();
     }
 
  private:
@@ -218,7 +222,7 @@ class Board {
     }
 
     bool isValidPoint(int i, int j) {
-        return i <= mWidth && j <= mHeight && i >= 0 && j >= 0 && std::find(mSnakeArray.begin(), mSnakeArray.end(), i * mWidth + j) == mSnakeArray.end();
+        return i < mWidth && j < mHeight && i >= 0 && j >= 0 && std::find(mSnakeArray.begin(), mSnakeArray.end(), i * mWidth + j) == mSnakeArray.end();
     }
 };
 
