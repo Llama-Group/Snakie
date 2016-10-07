@@ -22,12 +22,15 @@
 #include <thread>
 
 #include <Board.h>
+#include <QLearning.h>
 
 using std::cout;
 
+using hamster::QLearning;
+
 Board myBoard(15, 15);
 
-uint8_t currentInput = -1;
+uint8_t currentInput = 100;
 
 char getch() {
     char buf = 0;
@@ -64,9 +67,15 @@ void gameover() {
     exit(0);
 }
 
+#include <random>
+
 int main() {
     setup();
+    QLearning ql({{10, 10, 10, 10},
+                  {1,  1,  1,  1},
+                  {0,  0,  0,  0}});
     while (1) {
+        /* Human interaction.
         switch (getch()) {
             case 'w':
                 currentInput = Up;
@@ -82,7 +91,18 @@ int main() {
                 break;
             default:
                 break;
-        }
+        }*/
+        std::random_device mRandomDevice;
+        std::uniform_int_distribution<int> mActionDistribution(Up, Right);
+
+        int count = 0;
+        uint8_t move;
+        do {
+            move = mActionDistribution(mRandomDevice);
+            count++;
+        } while (!myBoard.isValidMove(Directions[move]) || count <= 4);
+        currentInput = move;
+
         switch (myBoard.moveSnake(currentInput)) {
             case -1:
                 gameover();

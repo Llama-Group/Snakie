@@ -31,11 +31,12 @@ endif()
 set(PROJECT_ROOT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_ROOT_DIRECTORY}/../lib_snakie")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_ROOT_DIRECTORY}/../bin_snakie")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_ROOT_DIRECTORY}/../../bin_snakie")
 set(CMAKE_SOURCE_DIR "${PROJECT_ROOT_DIRECTORY}")
 set(CMAKE_INCLUDE_DIR "${PROJECT_ROOT_DIRECTORY}")
 
 include_directories(${CMAKE_INCLUDE_DIR}/)
+include_directories(${PROJECT_ROOT_DIRECTORY}/../../Project-Hamster/include/)
 
 file(GLOB_RECURSE SOURCE_FILES ${CMAKE_SOURCE_DIR}/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_INCLUDE_DIR}/*.h)
@@ -45,6 +46,6 @@ source_group("Headers" FILES ${HEADER_FILES})
 #
 # Build targets
 #
-
 add_executable(snakie ${SOURCE_FILES})
+target_link_libraries(snakie ${PROJECT_ROOT_DIRECTORY}/../../build_hamster/libhamster.a)
 

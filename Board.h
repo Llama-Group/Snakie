@@ -81,7 +81,7 @@ class Board {
     }
 
     int moveSnake(uint8_t dir) {
-        if (dir == -1) {
+        if (dir == 100) {
             dir = mLastDirection;
         }
         int i = mSnakeArray.back() / mWidth;
@@ -166,6 +166,12 @@ class Board {
 
     int getScore() {
         return mSnakeArray.size();
+    }
+
+    bool isValidMove(std::function<void(int&, int&)> move) {
+        int i = mSnakeArray.back() / mWidth, j = mSnakeArray.back() % mWidth;
+        move(i, j);
+        return isValidPoint(i, j);
     }
 
  private:
