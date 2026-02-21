@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Snakie Web</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="scene-bg"></div>
+    <main class="app-shell">
+      <section class="control-panel">
+        <p class="eyebrow">Llama Group</p>
+        <h1>Snakie Web</h1>
+        <p class="subtitle">网页增强版 Snake，支持挑战模式、动态加速与历史高分。</p>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span>分数</span>
+            <strong id="score">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>最高分</span>
+            <strong id="highScore">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>等级</span>
+            <strong id="level">1</strong>
+          </article>
+          <article class="stat-card">
+            <span>连击</span>
+            <strong id="combo">x1</strong>
+          </article>
+        </div>
+
+        <div class="controls">
+          <label>
+            模式
+            <select id="modeSelect">
+              <option value="classic">经典（撞墙结束）</option>
+              <option value="warp">穿墙（边界环绕）</option>
+              <option value="challenge">挑战（障碍 + 金色食物）</option>
+            </select>
+          </label>
+
+          <label>
+            棋盘尺寸
+            <select id="sizeSelect">
+              <option value="16">16 x 16</option>
+              <option value="20" selected>20 x 20</option>
+              <option value="24">24 x 24</option>
+            </select>
+          </label>
+
+          <label>
+            初始速度
+            <input id="speedRange" type="range" min="1" max="5" value="3" />
+          </label>
+
+          <label class="row">
+            <input id="gridToggle" type="checkbox" checked />
+            显示网格
+          </label>
+
+          <div class="button-row">
+            <button id="startBtn">开始新游戏</button>
+            <button id="pauseBtn" class="secondary">暂停</button>
+            <button id="restartBtn" class="ghost">重开</button>
+          </div>
+        </div>
+
+        <p id="statusLine" class="status-line">按方向键 / WASD / 下方按钮开始。</p>
+
+        <div class="help">
+          <p>功能增强：</p>
+          <ul>
+            <li>自动提速与等级成长</li>
+            <li>连击加分与金色食物奖励</li>
+            <li>挑战模式障碍物生成</li>
+            <li>本地最高分存档</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="board-panel">
+        <canvas id="gameCanvas" width="720" height="720" aria-label="Snakie game board"></canvas>
+        <div class="mobile-pad" aria-label="移动方向键">
+          <button class="pad-btn" data-dir="UP">▲</button>
+          <button class="pad-btn" data-dir="LEFT">◀</button>
+          <button class="pad-btn" data-dir="DOWN">▼</button>
+          <button class="pad-btn" data-dir="RIGHT">▶</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="./gameEngine.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
