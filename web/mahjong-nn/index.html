@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mahjong NN Arena</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="bg-gradient"></div>
+    <main class="layout">
+      <aside class="panel control">
+        <p class="tag">Neural Mahjong</p>
+        <h1>Mahjong NN Arena</h1>
+        <p class="desc">简化麻将规则，3 个 AI 由轻量神经网络驱动出牌。</p>
+
+        <div class="stats">
+          <article>
+            <span>牌墙剩余</span>
+            <strong id="wallLeft">0</strong>
+          </article>
+          <article>
+            <span>回合</span>
+            <strong id="turnCount">0</strong>
+          </article>
+          <article>
+            <span>当前玩家</span>
+            <strong id="currentPlayer">-</strong>
+          </article>
+          <article>
+            <span>AI 训练步数</span>
+            <strong id="trainSteps">0</strong>
+          </article>
+          <article>
+            <span>最近训练损失</span>
+            <strong id="trainLoss">-</strong>
+          </article>
+        </div>
+
+        <div class="actions">
+          <button id="newGameBtn">新开一局</button>
+          <button id="trainBtn" class="secondary">训练 AI</button>
+          <button id="autoBtn" class="ghost">AI 自动推进</button>
+        </div>
+
+        <p id="statusLine" class="status">初始化中...</p>
+
+        <div class="tips">
+          <p>规则说明</p>
+          <ul>
+            <li>仅万/筒/条三门，1-9 各四张</li>
+            <li>不吃碰杠，只支持自摸胡</li>
+            <li>胡牌形：四组面子 + 一对将</li>
+          </ul>
+        </div>
+      </aside>
+
+      <section class="panel table">
+        <div class="opponents">
+          <article class="seat" id="seat1">
+            <h2>P2 (AI)</h2>
+            <div class="concealed" id="p2Tiles"></div>
+          </article>
+          <article class="seat" id="seat2">
+            <h2>P3 (AI)</h2>
+            <div class="concealed" id="p3Tiles"></div>
+          </article>
+          <article class="seat" id="seat3">
+            <h2>P4 (AI)</h2>
+            <div class="concealed" id="p4Tiles"></div>
+          </article>
+        </div>
+
+        <div class="human-zone">
+          <h2>你的手牌 (P1)</h2>
+          <div id="humanTiles" class="human-tiles"></div>
+        </div>
+
+        <div class="log-zone">
+          <h3>牌局日志</h3>
+          <pre id="logs"></pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="./engine.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
